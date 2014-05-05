@@ -1,8 +1,5 @@
 /*
- *Line Follower Robot
- *Adaptation of FastIrRoaming from Parallax Database  
- *ES50 Lab 4
- *Jason Smith and Demetrio Anaya 
+ * The Nose Knows Code
  */
  
 #include <Servo.h>                           // Include servo library
@@ -44,7 +41,7 @@ void loop()                                  // Main loop auto-repeats
   int irCenter =  digitalRead(6);       // Set value of CENTER sensor
   int irRight  =  digitalRead(7);       // Set value of RIGHT sensor
   
-  //Serial.println(digitalRead(i));	    // If enabled will display feedback of pin i in serial monitor
+  Serial.println(irCenter);     //If enabled will display feedback of pin i in serial monitor
   //delay(250);
   // The PING))) is triggered by a HIGH pulse of 2 or more microseconds.
   // Give a short LOW pulse beforehand to ensure a clean HIGH pulse:
@@ -67,28 +64,41 @@ void loop()                                  // Main loop auto-repeats
   // convert the time into a distance
   inches = microsecondsToInches(duration);
   cm = microsecondsToCentimeters(duration);
+  
   /*
-  * Serial.print(inches);
-  * Serial.print("in, ");
-  * Serial.print(cm);
-  * Serial.print("cm");
-  * Serial.println();
+  Serial.print(inches);
+  Serial.print("in, ");
+  Serial.print(cm);
+  Serial.print("cm");
+  Serial.println();
   */
   
-  if (Serial.available())
+  
+ if (irLeft == 1 || irCenter == 1 || irRight == 1)
+ {
+     motor.step(-100);
+ }
+ 
+ if (cm < 40 && cm > 5)
   {
-    int steps = Serial.parseInt();
-    motor.step(steps);
+     
+    maneuver(100,100,60);
   }
- /*
-  if (cm < 85) {
-    maneuver(200, 200, 60);                  // Forward 20 milliseconds
+ 
+ else if (cm > 40)
+ {
+   maneuver(0,0,20);
+ }
+ 
+ else if (cm < 5) {
+     motor.step(100);
+      maneuver(100, 100, -1); 
+ }
+    
+  else {
+    maneuver(0,0,20);
   }
-  else
-  {
-    maneuver(0,0,60);
-  }
- */
+ 
 
 }
 
